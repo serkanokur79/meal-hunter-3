@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Meal Hunter
+
+A Next.js application for searching and discovering delicious meals.
+
+## Features
+
+- Search for meals by name, ingredient, category, or area.
+- Browse random meals.
+- View detailed meal information, including instructions and video tutorials.
+- Add meals to your favorites.
+- Responsive design for various screen sizes.
+
+## Technologies Used
+
+- Next.js
+- Tailwind CSS
+- React
+- TheMealDB API
+- Clerk.js (for authentication)
+- Firebase (for favorites)
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository: `git clone https://github.com/your-username/meal-hunter-3.git`
+2. Install dependencies: `npm install`
+3. Run the development server: `npm run dev`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Screenshots
+
+```markdown
+![Home Page](ss/01.png)
+_Home Page_
+
+![Search Results](ss/02.png)
+_Search Results By Name as Cards_
+
+![Search Results](ss/03.png)
+_Search Results By Name as Table_
+
+![Search Results](ss/04.png)
+_Search Results by Area_
+
+![Favorites](ss/05.png)
+_Favorites_
+
+![Meal Details](ss/07.png)
+_Meal Details_
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## License
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT License
