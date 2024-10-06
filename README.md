@@ -27,7 +27,7 @@ A Next.js application for searching and discovering delicious meals.
 
 ## Screenshots
 
-```markdown
+
 ![Home Page](ss/01.png)
 _Home Page_
 
@@ -45,7 +45,7 @@ _Favorites_
 
 ![Meal Details](ss/07.png)
 _Meal Details_
-```
+
 
 ## License
 
