@@ -25,10 +25,10 @@ export default async function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      <body className={`${inter.className} flex flex-col min-h-screen  mx-auto`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <Header  />
-      <div className='flex-1'>
+      <div className='flex-grow container mx-auto'>
           {children}</div>
           <Toaster />
           <Footer />

@@ -16,8 +16,6 @@ import { Button } from './ui/button';
 import MealCard from './MealCard';
 import { Meal } from '@/app/types';
 
-
-
 export default function MealList({
   meals,
   title,
@@ -38,10 +36,27 @@ export default function MealList({
   const currentMeals = meals.slice(startIndex, endIndex);
 
   return (
-    <div className='mt-4'>
+    <div className="container mx-auto p-4 bg-cover bg-center text-sm xl:text-base">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
         <p className="text-sm text-muted-foreground">{title}</p>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-row w-full items-center gap-4 justify-between">
+          <ToggleGroup
+            type="single"
+            value={view}
+            onValueChange={(value) =>
+              setView(value as 'small' | 'medium' | 'list')
+            }
+          >
+            <ToggleGroupItem value="small" aria-label="Small grid view">
+              <Grid3X3 className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="medium" aria-label="Medium grid view">
+              <LayoutGrid className="h-4 w-4" />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="list" aria-label="List view" className='hidden md:block'>
+              <Table className="h-4 w-4" />
+            </ToggleGroupItem>
+          </ToggleGroup>
           <Select
             value={itemsPerPage.toString()}
             onValueChange={(value) => {
@@ -49,23 +64,6 @@ export default function MealList({
               setCurrentPage(1);
             }}
           >
-            <ToggleGroup
-              type="single"
-              value={view}
-              onValueChange={(value) =>
-                setView(value as 'small' | 'medium' | 'list')
-              }
-            >
-              <ToggleGroupItem value="small" aria-label="Small grid view">
-                <Grid3X3 className="h-4 w-4" />
-              </ToggleGroupItem>
-              <ToggleGroupItem value="medium" aria-label="Medium grid view">
-                <LayoutGrid className="h-4 w-4" />
-              </ToggleGroupItem>
-              <ToggleGroupItem value="list" aria-label="List view">
-                <Table className="h-4 w-4" />
-              </ToggleGroupItem>
-            </ToggleGroup>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Results per page" />
             </SelectTrigger>
@@ -82,7 +80,7 @@ export default function MealList({
         <MealTable meals={currentMeals} />
       ) : (
         <div
-          className={`grid gap-6 ${view === 'small' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}`}
+          className={`grid gap-6 ${view === 'small' ? 'grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}`}
         >
           {currentMeals.map((meal) => (
             <>

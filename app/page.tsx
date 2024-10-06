@@ -23,6 +23,8 @@ import {
 } from '@/components/ui/select';
 import MealList from '@/components/MealList';
 import MealComponent from '@/components/MealPage';
+import { Menu, RefreshCw, Search, SearchIcon } from 'lucide-react';
+import MealDetailSkeleton from '@/components/MealDetailSkeleton';
 
 export default function Home() {
   const {
@@ -43,13 +45,12 @@ export default function Home() {
     selectedArea,
     setSelectedArea,
     setSearchResultsByArea,
-    searchResultsByArea
+    searchResultsByArea,
   } = useSearchStore();
 
   const [randomMeal, setRandomMeal] = useState<Meal | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [areas, setAreas] = useState<Area[]>([]);
-
 
   const handleSearch = async () => {
     try {
@@ -79,8 +80,6 @@ export default function Home() {
     }
   };
 
-
-
   const handleSearchForIngredient = async (ingredient: string) => {
     try {
       const results = await getMealByIngredient(ingredient);
@@ -90,11 +89,21 @@ export default function Home() {
     }
   };
 
+  const getNewRandomMeal = async () => {
+    setRandomMeal(null);
+    try {
+      const randomMealData = await getRandomMeal();
+      setRandomMeal(randomMealData.meals?.[0]);
+    } catch (error) {
+      console.error('Error fetching random meal:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const randomMealData = await getRandomMeal();
-        setRandomMeal(randomMealData.meals?.[0]);
+      setRandomMeal(randomMealData.meals?.[0]);
         const categoriesData = await getMealCategories();
         setCategories(categoriesData.categories || []);
         const areasData = await getMealAreas();
@@ -107,69 +116,104 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 container mx-auto py-2">
-      <section className="mb-2">
-        <Tabs defaultValue={selectedTab} onValueChange={setSelectedTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="random">Random Meal</TabsTrigger>
-            <TabsTrigger value="name">Search by Name</TabsTrigger>
-            <TabsTrigger value="ingredient">Search by Ingredient</TabsTrigger>
-            <TabsTrigger value="category">Browse Categories</TabsTrigger>
-            <TabsTrigger value="area">Browse Areas</TabsTrigger>
+    <div className="flex flex-col gap-2 container mx-auto py-2 text-sm md:text-base">
+      <section className="mb-2 container">
+        <Tabs defaultValue={selectedTab} onValueChange={setSelectedTab}>
+          <TabsList className="grid w-full grid-cols-5 ">
+            <TabsTrigger value="random" className="text-sm sm:text-base" onClick={()=>getNewRandomMeal()}>
+              <RefreshCw className="hidden md:block w-4 h-4 mr-2" />
+              Random
+            </TabsTrigger>
+            <TabsTrigger value="name" className="text-sm sm:text-base">
+              <Search className="hidden md:block w-4 h-4 mr-2" />
+              Name
+            </TabsTrigger>
+            <TabsTrigger value="ingredient" className="text-sm sm:text-base">
+              <Search className="hidden md:block w-4 h-4 mr-2" /> Ingredient
+            </TabsTrigger>
+            <TabsTrigger value="category" className="text-sm sm:text-base">
+              <Menu className="hidden md:block w-4 h-4 mr-2" />
+              Category
+            </TabsTrigger>
+            <TabsTrigger value="area" className="text-sm sm:text-base">
+              {' '}
+              <Menu className="hidden md:block w-4 h-4 mr-2" />
+              Area
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="random">
-            <Suspense fallback={<div>Loading...</div>}>
-              {randomMeal && <MealComponent meal={randomMeal} />}
+            <Suspense fallback={<MealDetailSkeleton />} >
+              {!randomMeal && <MealDetailSkeleton />}
+              {randomMeal && <MealComponent meal={randomMeal} key={randomMeal.idMeal} />}
             </Suspense>
           </TabsContent>
           <TabsContent value="name">
-            <div className="mt-4 flex flex-row gap-2">
+            <div className="mt-4 flex flex-row gap-1 mx-2 md:mx-4">
               <Input
                 type="search"
                 placeholder="Enter meal name..."
                 value={searchText}
-                className="flex-1"
+                className="flex-grow"
                 onChange={(e) => setSearchText(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
               <Button type="submit" onClick={handleSearch}>
-                Search
+                <SearchIcon className="w-4 h-4 md:hidden" />
+                <span className="hidden md:block">Search</span>
               </Button>
             </div>
             {searchResults.length > 0 && (
               <section className="mb-12">
-                <MealList meals={searchResults} title={`Displaying results for ${searchText}`} />
+                <MealList
+                  meals={searchResults}
+                  title={`Displaying results for ${searchText}`}
+                />
               </section>
             )}
           </TabsContent>
           <TabsContent value="ingredient">
-            <div className="mt-4 flex flex-row gap-2">
+            <div className="mt-4 flex flex-row gap-1 mx-2 md:mx-4">
               <Input
                 type="search"
                 placeholder="Enter ingredient..."
                 value={searchTextForIngredient}
                 onChange={(e) => setSearchTextForIngredient(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearchForIngredient(searchTextForIngredient)}
+                onKeyDown={(e) =>
+                  e.key === 'Enter' &&
+                  handleSearchForIngredient(searchTextForIngredient)
+                }
               />
-              <Button type="submit" onClick={() => handleSearchForIngredient(searchTextForIngredient)}>
-                Search
+              <Button
+                type="submit"
+                onClick={() =>
+                  handleSearchForIngredient(searchTextForIngredient)
+                }
+              >
+                <SearchIcon className="w-4 h-4 md:hidden" />
+                <span className="hidden md:block">Search</span>
               </Button>
             </div>
             {searchResultsByIngredient.length > 0 && (
               <section className="mb-12">
-                <MealList meals={searchResultsByIngredient} title={`Displaying results for ingredient: ${searchTextForIngredient}`} />
+                <MealList
+                  meals={searchResultsByIngredient}
+                  title={`Displaying results for ingredient: ${searchTextForIngredient}`}
+                />
               </section>
             )}
           </TabsContent>
           <TabsContent value="category">
-            <div className="mt-4 flex flex-row gap-2">
+            <div className="m-4">
               <Select onValueChange={handleCategorySelect}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category.idCategory} value={category.strCategory}>
+                    <SelectItem
+                      key={category.idCategory}
+                      value={category.strCategory}
+                    >
                       {category.strCategory}
                     </SelectItem>
                   ))}
@@ -178,12 +222,15 @@ export default function Home() {
             </div>
             {searchResultsByCategory.length > 0 && (
               <section className="mb-12">
-                <MealList meals={searchResultsByCategory} title={`Displaying results for category: ${selectedCategory}`} />
+                <MealList
+                  meals={searchResultsByCategory}
+                  title={`Displaying results for category: ${selectedCategory}`}
+                />
               </section>
             )}
           </TabsContent>
           <TabsContent value="area">
-            <div className="mt-4 flex flex-row gap-2">
+            <div className="m-4">
               <Select onValueChange={handleAreaSelect}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select an area" />
@@ -199,7 +246,10 @@ export default function Home() {
             </div>
             {searchResultsByArea.length > 0 && (
               <section className="mb-12">
-                <MealList meals={searchResultsByArea} title={`Displaying results for area: ${selectedArea}`} />
+                <MealList
+                  meals={searchResultsByArea}
+                  title={`Displaying results for area: ${selectedArea}`}
+                />
               </section>
             )}
           </TabsContent>

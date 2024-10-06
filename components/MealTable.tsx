@@ -176,8 +176,8 @@ export default function MealTable({ meals }: { meals: Meal[] }) {
   });
 
   return (
-    <div className="rounded-md border">
-      <Table>
+    <div className="rounded-md border container">
+      <Table className='table-auto w-full'>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
