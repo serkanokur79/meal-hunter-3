@@ -1,8 +1,6 @@
 // app/favorites/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import MealCard from '@/components/MealCard';
 import { Meal } from '../types';
 import { getFavorites } from '../actions/mealActions';
 import useFavoritesStore from '@/store/favoritesStore';

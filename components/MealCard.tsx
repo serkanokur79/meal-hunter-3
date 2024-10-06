@@ -1,22 +1,20 @@
 'use client';
 
-import { Card, CardContent, CardFooter } from './ui/card';
+import { Card, CardContent } from './ui/card';
 
 import Link from 'next/link';
 import { Meal } from '@/app/types';
 import { FavoriteButton } from './FavoriteButton';
 import { Badge } from './ui/badge';
-import { useUserStore } from '@/store/useUserStore';
+
 import { SignedIn } from '@clerk/nextjs';
-import { ExternalLink, EyeIcon } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 interface MealCardProps {
   meal: Meal;
-  size?: 'small' | 'medium';
 }
 
-const MealCard: React.FC<MealCardProps> = ({ meal, size = 'medium' }) => {
-  // const {userLoggedIn} = useUserStore();
+const MealCard: React.FC<MealCardProps> = ({ meal }) => {
   return (
     <Card className="relative w-full h-64 overflow-hidden group">
      

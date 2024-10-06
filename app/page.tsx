@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import useFavoritesStore from '@/store/favoritesStore';
 import MealList from '@/components/MealList';
 import MealComponent from '@/components/MealPage';
 

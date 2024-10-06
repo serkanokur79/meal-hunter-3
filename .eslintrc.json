@@ -1,12 +1,27 @@
 {
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
+    // "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:@next/next/recommended"
   ],
   "plugins": ["react", "@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
-    // Your custom rules
+    "react/react-in-jsx-scope": "off", // Disable the rule for React in scope
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-page-custom-font": "off",
+    "@typescript-eslint/no-unused-vars": "off"
   }
 }

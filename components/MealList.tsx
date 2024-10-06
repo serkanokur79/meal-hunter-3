@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { LayoutGrid, Table, Grid3X3 } from 'lucide-react';
 import MealTable from './MealTable';
-import MealCardNew from './MealCardNew';
+
 import {
   Select,
   SelectContent,
@@ -14,15 +14,9 @@ import {
 } from './ui/select';
 import { Button } from './ui/button';
 import MealCard from './MealCard';
-// import MealCard from './MealCard';
+import { Meal } from '@/app/types';
 
-interface Meal {
-  idMeal: string;
-  strMeal: string;
-  strMealThumb: string;
-  strCategory: string;
-  strArea: string;
-}
+
 
 export default function MealList({
   meals,
@@ -92,8 +86,7 @@ export default function MealList({
         >
           {currentMeals.map((meal) => (
             <>
-              {/* <MealCardNew key={meal.idMeal} meal={meal} size={view} /> */}
-              <MealCard key={meal.idMeal} meal={meal} size={view} />
+              <MealCard key={meal.idMeal} meal={meal} />
             </>
           ))}
         </div>

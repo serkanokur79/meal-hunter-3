@@ -1,9 +1,9 @@
-// app/components/Header.tsx
+
 'use client';
 import Link from 'next/link';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { Button } from './ui/button';
-import { FileHeart, Heart, Moon, Sun, Utensils } from 'lucide-react';
+import { FileHeart, Moon, Sun, Utensils } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,

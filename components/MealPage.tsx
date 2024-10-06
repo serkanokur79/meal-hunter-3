@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
@@ -11,7 +11,7 @@ import { SignedIn } from '@clerk/nextjs';
 import { Book, ChefHat, ExternalLink, TvMinimalPlayIcon, UtensilsCrossed } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
-import { ScrollArea } from './ui/scroll-area';
+
 
 interface MealComponentProps {
   meal: Meal

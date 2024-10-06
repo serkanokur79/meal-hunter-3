@@ -7,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
-import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
 
 export default function MealListSkeleton() {

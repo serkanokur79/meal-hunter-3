@@ -29,7 +29,8 @@ import {
   DialogTrigger,
 } from './ui/dialog';
 
-import VideoPlayer from './VideoPlayer';
+
+import Image from 'next/image';
 
 export default function MealTable({ meals }: { meals: Meal[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -58,9 +59,11 @@ export default function MealTable({ meals }: { meals: Meal[] }) {
       accessorKey: 'strMealThumb',
       header: 'Thumbnail',
       cell: ({ row }) => (
-        <img
+        <Image
           src={row.getValue('strMealThumb')}
           alt={row.getValue('strMeal')}
+          width={144}
+          height={96}
           className="h-24 w-36 object-center rounded hover:z-20 hover:scale-150"
         />
       ),
