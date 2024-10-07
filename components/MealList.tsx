@@ -36,27 +36,34 @@ export default function MealList({
   const currentMeals = meals.slice(startIndex, endIndex);
 
   return (
-    <div className="container mx-auto p-4 bg-cover bg-center text-sm xl:text-base">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-        <p className="text-sm text-muted-foreground">{title}</p>
-        <div className="flex flex-row w-full items-center gap-4 justify-between">
-          <ToggleGroup
-            type="single"
-            value={view}
-            onValueChange={(value) =>
-              setView(value as 'small' | 'medium' | 'list')
-            }
-          >
-            <ToggleGroupItem value="small" aria-label="Small grid view">
-              <Grid3X3 className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="medium" aria-label="Medium grid view">
-              <LayoutGrid className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="list" aria-label="List view" className='hidden md:block'>
-              <Table className="h-4 w-4" />
-            </ToggleGroupItem>
-          </ToggleGroup>
+    <div className="container mx-auto p-4 bg-cover bg-center text-sm xl:text-base border mt-4">
+      <div className="flex flex-col md:flex-row justify-between items-center md:items-start  mb-4  w-full  ">
+        <div className='flex flex-row  w-full justify-between'>
+          <p className="text-sm text-muted-foreground flex-grow justify-start flex items-center p-2">{title}</p>
+          <div className="flex flex-row items-center gap-4">
+            <ToggleGroup
+              type="single"
+              value={view}
+              onValueChange={(value) =>
+          setView(value as 'small' | 'medium' | 'list')
+              }
+            >
+              <ToggleGroupItem value="small" aria-label="Small grid view">
+          <Grid3X3 className="h-4 w-4" />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="medium" aria-label="Medium grid view">
+          <LayoutGrid className="h-4 w-4" />
+              </ToggleGroupItem>
+              <ToggleGroupItem
+          value="list"
+          aria-label="List view"
+          className="hidden md:block"
+              >
+          <Table className="h-4 w-4" />
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+        </div><div className='flex '>
           <Select
             value={itemsPerPage.toString()}
             onValueChange={(value) => {
@@ -73,8 +80,7 @@ export default function MealList({
               <SelectItem value="24">24 per page</SelectItem>
               <SelectItem value="48">48 per page</SelectItem>
             </SelectContent>
-          </Select>
-        </div>
+          </Select></div>
       </div>
       {view === 'list' ? (
         <MealTable meals={currentMeals} />
@@ -83,9 +89,7 @@ export default function MealList({
           className={`grid gap-6 ${view === 'small' ? 'grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}`}
         >
           {currentMeals.map((meal) => (
-            <>
-              <MealCard key={meal.idMeal} meal={meal} />
-            </>
+            <MealCard key={meal.idMeal} meal={meal} />
           ))}
         </div>
       )}

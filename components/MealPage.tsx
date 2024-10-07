@@ -143,7 +143,7 @@ export function MealComponent({ meal }: MealComponentProps) {
           </CardContent>
         </Card>
         <div className='md:pl-4'>
-        <Card className=''>
+        <Card className="h-full">
           <CardHeader>
             <h3 className="text-lg font-semibold mb-2 flex items-center">
               <TvMinimalPlayIcon className="mr-2" /> Video Tutorial

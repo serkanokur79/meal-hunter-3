@@ -25,19 +25,25 @@ import MealList from '@/components/MealList';
 import MealComponent from '@/components/MealPage';
 import { Menu, RefreshCw, Search, SearchIcon } from 'lucide-react';
 import MealDetailSkeleton from '@/components/MealDetailSkeleton';
+import MealListSkeleton from '@/components/MealListSkeleton';
+import RedAlert from '@/components/red-alert';
 
 export default function Home() {
   const {
     selectedTab,
     searchText,
+    searchedText,
     searchTextForIngredient,
+    searchedTextForIngredient,
     selectedCategory,
     searchResults,
     searchResultsByIngredient,
     searchResultsByCategory,
     setSelectedTab,
     setSearchText,
+    setSearchedText,
     setSearchTextForIngredient,
+    setSearchedTextForIngredient,
     setSelectedCategory,
     setSearchResults,
     setSearchResultsByIngredient,
@@ -51,12 +57,19 @@ export default function Home() {
   const [randomMeal, setRandomMeal] = useState<Meal | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [areas, setAreas] = useState<Area[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchForIngredientsLoading, setSearchForIngredientsLoading] =
+    useState(false);
 
   const handleSearch = async () => {
+    setSearchLoading(true);
     try {
       const mealData = await searchMealByName(searchText);
+      setSearchedText(searchText);
       setSearchResults(mealData.meals || []);
+      setSearchLoading(false);
     } catch (error) {
+      setSearchLoading(false);
       console.error('Error searching meals:', error);
     }
   };
@@ -81,11 +94,15 @@ export default function Home() {
   };
 
   const handleSearchForIngredient = async (ingredient: string) => {
+    setSearchForIngredientsLoading(true);
     try {
       const results = await getMealByIngredient(ingredient);
+      setSearchedTextForIngredient(ingredient);
       setSearchResultsByIngredient(results.meals || []);
+      setSearchForIngredientsLoading(false);
     } catch (error) {
       console.error('Error searching by ingredient:', error);
+      setSearchForIngredientsLoading(false);
     }
   };
 
@@ -103,7 +120,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const randomMealData = await getRandomMeal();
-      setRandomMeal(randomMealData.meals?.[0]);
+        setRandomMeal(randomMealData.meals?.[0]);
         const categoriesData = await getMealCategories();
         setCategories(categoriesData.categories || []);
         const areasData = await getMealAreas();
@@ -120,31 +137,33 @@ export default function Home() {
       <section className="mb-2 container">
         <Tabs defaultValue={selectedTab} onValueChange={setSelectedTab}>
           <TabsList className="grid w-full grid-cols-5 ">
-            <TabsTrigger value="random" className="text-sm sm:text-base" onClick={()=>getNewRandomMeal()}>
+            <TabsTrigger value="random" onClick={() => getNewRandomMeal()}>
               <RefreshCw className="hidden md:block w-4 h-4 mr-2" />
               Random
             </TabsTrigger>
-            <TabsTrigger value="name" className="text-sm sm:text-base">
+            <TabsTrigger value="name">
               <Search className="hidden md:block w-4 h-4 mr-2" />
               Name
             </TabsTrigger>
-            <TabsTrigger value="ingredient" className="text-sm sm:text-base">
+            <TabsTrigger value="ingredient">
               <Search className="hidden md:block w-4 h-4 mr-2" /> Ingredient
             </TabsTrigger>
-            <TabsTrigger value="category" className="text-sm sm:text-base">
+            <TabsTrigger value="category">
               <Menu className="hidden md:block w-4 h-4 mr-2" />
               Category
             </TabsTrigger>
-            <TabsTrigger value="area" className="text-sm sm:text-base">
+            <TabsTrigger value="area">
               {' '}
               <Menu className="hidden md:block w-4 h-4 mr-2" />
               Area
             </TabsTrigger>
           </TabsList>
           <TabsContent value="random">
-            <Suspense fallback={<MealDetailSkeleton />} >
+            <Suspense fallback={<MealDetailSkeleton />}>
               {!randomMeal && <MealDetailSkeleton />}
-              {randomMeal && <MealComponent meal={randomMeal} key={randomMeal.idMeal} />}
+              {randomMeal && (
+                <MealComponent meal={randomMeal} key={randomMeal.idMeal} />
+              )}
             </Suspense>
           </TabsContent>
           <TabsContent value="name">
@@ -162,13 +181,27 @@ export default function Home() {
                 <span className="hidden md:block">Search</span>
               </Button>
             </div>
-            {searchResults.length > 0 && (
-              <section className="mb-12">
-                <MealList
-                  meals={searchResults}
-                  title={`Displaying results for ${searchText}`}
-                />
-              </section>
+            {searchText === '' ? (
+              <div className="text-center text-gray-500 mt-8">
+                Enter a meal name and click Search to begin
+              </div>
+            ) : searchResults === null ? (
+              searchLoading ? (
+                <MealListSkeleton />
+              ) : (
+                <div className="text-center text-gray-500 mt-8">
+                  Enter a meal name and click Search to begin
+                </div>
+              )
+            ) : searchResults.length === 0 ? (
+              <RedAlert
+                text={' No meals found. Try a different search term.'}
+              />
+            ) : (
+              <MealList
+                meals={searchResults}
+                title={`Showing results for meal "${searchedText}"`}
+              />
             )}
           </TabsContent>
           <TabsContent value="ingredient">
@@ -193,13 +226,28 @@ export default function Home() {
                 <span className="hidden md:block">Search</span>
               </Button>
             </div>
-            {searchResultsByIngredient.length > 0 && (
-              <section className="mb-12">
-                <MealList
-                  meals={searchResultsByIngredient}
-                  title={`Displaying results for ingredient: ${searchTextForIngredient}`}
-                />
-              </section>
+
+            {searchTextForIngredient === '' ? (
+              <div className="text-center text-gray-500 mt-8">
+                Enter a meal name and click Search to begin
+              </div>
+            ) : searchResultsByIngredient === null ? (
+              searchForIngredientsLoading ? (
+                <MealListSkeleton />
+              ) : (
+                <div className="text-center text-gray-500 mt-8">
+                  Enter a meal name and click Search to begin
+                </div>
+              )
+            ) : searchResultsByIngredient.length === 0 ? (
+              <div className="text-center text-red-500 mt-8">
+                No meals found. Try a different search term.
+              </div>
+            ) : (
+              <MealList
+                meals={searchResultsByIngredient}
+                title={`Showing results for ingredient "${searchedTextForIngredient}"`}
+              />
             )}
           </TabsContent>
           <TabsContent value="category">
@@ -220,13 +268,22 @@ export default function Home() {
                 </SelectContent>
               </Select>
             </div>
-            {searchResultsByCategory.length > 0 && (
-              <section className="mb-12">
-                <MealList
-                  meals={searchResultsByCategory}
-                  title={`Displaying results for category: ${selectedCategory}`}
-                />
-              </section>
+
+            {selectedCategory === '' ? (
+              <div className="text-center text-gray-500 mt-8">
+                Select a category to filter meals
+              </div>
+            ) : searchResultsByCategory === null ? (
+              <div className="text-center text-gray-500 mt-8">Searching...</div>
+            ) : searchResultsByCategory.length === 0 ? (
+              <div className="text-center text-red-500 mt-8">
+                No meals found. Try a different category.
+              </div>
+            ) : (
+              <MealList
+                meals={searchResultsByCategory}
+                title={'Showing results for ' + selectedCategory}
+              />
             )}
           </TabsContent>
           <TabsContent value="area">
@@ -244,13 +301,21 @@ export default function Home() {
                 </SelectContent>
               </Select>
             </div>
-            {searchResultsByArea.length > 0 && (
-              <section className="mb-12">
-                <MealList
-                  meals={searchResultsByArea}
-                  title={`Displaying results for area: ${selectedArea}`}
-                />
-              </section>
+            {selectedArea === '' ? (
+              <div className="text-center text-gray-500 mt-8">
+                Select a category to filter meals
+              </div>
+            ) : searchResultsByArea === null ? (
+              <div className="text-center text-gray-500 mt-8">Searching...</div>
+            ) : searchResultsByArea.length === 0 ? (
+              <div className="text-center text-red-500 mt-8">
+                No meals found. Try a different category.
+              </div>
+            ) : (
+              <MealList
+                meals={searchResultsByArea}
+                title={'Showing results for ' + selectedArea}
+              />
             )}
           </TabsContent>
         </Tabs>
