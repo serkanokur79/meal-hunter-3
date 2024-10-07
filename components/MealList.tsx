@@ -23,8 +23,8 @@ export default function MealList({
   meals: Meal[];
   title: string;
 }) {
-  const [view, setView] = useState<'small' | 'medium' | 'list'>('medium');
-  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [view, setView] = useState<'small' | 'medium' | 'list'>('small');
+  const [itemsPerPage, setItemsPerPage] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
   if (!meals || meals.length === 0) {
     return <p className="mt-4">No meals found. Try a different search term.</p>;
@@ -63,7 +63,7 @@ export default function MealList({
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
-        </div><div className='flex '>
+        </div><div className='hidden md:flex'>
           <Select
             value={itemsPerPage.toString()}
             onValueChange={(value) => {
@@ -86,10 +86,10 @@ export default function MealList({
         <MealTable meals={currentMeals} />
       ) : (
         <div
-          className={`grid gap-6 ${view === 'small' ? 'grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}`}
+          className={`grid gap-6 ${view === 'small' ? 'grid-cols-3 md:grid-cols-4 lg:grid-cols-6' : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}`}
         >
           {currentMeals.map((meal) => (
-            <MealCard key={meal.idMeal} meal={meal} />
+            <MealCard key={meal.idMeal} meal={meal} size={view} />
           ))}
         </div>
       )}
@@ -102,7 +102,25 @@ export default function MealList({
           >
             {page}
           </Button>
-        ))}
+        ))}</div>
+        <div className='flex md:hidden justify-center mt-4'>
+          <Select
+            value={itemsPerPage.toString()}
+            onValueChange={(value) => {
+              setItemsPerPage(Number(value));
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Results per page" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="6">6 per page</SelectItem>
+              <SelectItem value="12">12 per page</SelectItem>
+              <SelectItem value="24">24 per page</SelectItem>
+              <SelectItem value="48">48 per page</SelectItem>
+            </SelectContent>
+          </Select>
       </div>
     </div>
   );
